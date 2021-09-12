@@ -4,7 +4,9 @@
   "main": "dist/index.js",
   "scripts": {
     "start": "node dist/index.js",
-    "build": "tsc",
+    "build:code": "tsc",
+    "build:schema": "node dist/buildSchema.js",
+    "build": "yarn build:code && yarn build:schema",
     "dev:build": "tsc --watch",
     "dev:start": "nodemon --watch dist dist/index.js",
     "dev": "concurrently \"yarn:dev:*\""
