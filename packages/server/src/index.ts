@@ -7,6 +7,7 @@ import path from 'path';
 import 'reflect-metadata';
 import { buildSchema } from 'type-graphql';
 import { createConnection, getConnectionOptions } from 'typeorm';
+import { getUser } from './utils';
 
 dotenv.config();
 
@@ -31,6 +32,11 @@ const main = async () => {
   const server = new ApolloServer({
     schema,
     plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
+    context: async ({ req, res }) => {
+      const user = await getUser(req);
+
+      return { req, res, user };
+    },
   });
 
   await server.start();
