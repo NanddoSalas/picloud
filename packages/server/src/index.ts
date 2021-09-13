@@ -15,11 +15,10 @@ const main = async () => {
   const connectionOptions = await getConnectionOptions();
 
   Object.assign(connectionOptions, {
-    sincronize: true,
-    entities: [path.join(__dirname, '/entity/**/*.{ts,js}')],
+    entities: [path.join(__dirname, '/entities/*.{ts,js}')],
   });
 
-  await createConnection();
+  await createConnection(connectionOptions);
 
   const app = express();
 
