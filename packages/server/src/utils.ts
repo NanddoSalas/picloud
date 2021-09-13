@@ -1,8 +1,9 @@
+import { validate } from 'class-validator';
 import { Request } from 'express';
 import jwt from 'jsonwebtoken';
 import { User } from './entities';
+import { InputError } from './objectTypes';
 
-// eslint-disable-next-line import/prefer-default-export
 export const getUser = async (req: Request) => {
   const bearerHeader = req.headers.authorization;
 
@@ -19,4 +20,35 @@ export const getUser = async (req: Request) => {
     }
   }
   return undefined;
+};
+
+export const createAccesToken = async (user: User) => {
+  const payload = {
+    userId: user.id,
+    tokenVersion: user.tokenVersion,
+  };
+
+  return jwt.sign(payload, process.env.SECRET_KEY!);
+};
+
+export const validateInput = async (
+  input: any,
+): Promise<InputError[] | undefined> => {
+  const errors = await validate(input, {
+    stopAtFirstError: true,
+    validationError: { target: false, value: false },
+  });
+
+  if (errors.length === 0) return undefined;
+
+  const formattedErrors: InputError[] = [];
+
+  errors.forEach(({ property, constraints }) => {
+    formattedErrors.push({
+      path: property,
+      message: Object.entries(constraints!)[0][1],
+    });
+  });
+
+  return formattedErrors;
 };
