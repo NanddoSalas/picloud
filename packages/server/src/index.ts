@@ -27,6 +27,7 @@ const main = async () => {
 
   const schema = await buildSchema({
     resolvers: [path.join(__dirname, '/modules/**/*.resolver.{ts,js}')],
+    validate: false,
   });
 
   const server = new ApolloServer({
