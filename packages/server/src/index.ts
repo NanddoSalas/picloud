@@ -2,6 +2,7 @@ import { ApolloServerPluginDrainHttpServer } from 'apollo-server-core';
 import { ApolloServer } from 'apollo-server-express';
 import dotenv from 'dotenv';
 import express from 'express';
+import { graphqlUploadExpress } from 'graphql-upload';
 import { createServer } from 'http';
 import path from 'path';
 import 'reflect-metadata';
@@ -21,6 +22,8 @@ const main = async () => {
   await createConnection(connectionOptions);
 
   const app = express();
+
+  app.use(graphqlUploadExpress());
 
   const httpServer = createServer(app);
 
