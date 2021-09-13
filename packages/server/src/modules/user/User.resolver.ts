@@ -1,7 +1,13 @@
 import { Arg, Ctx, Mutation, Query, Resolver } from 'type-graphql';
 import { User } from '../../entities';
 import { Context } from '../../types';
-import { authenticate, createAccesToken, validateInput } from '../../utils';
+import {
+  authenticate,
+  authenticateWithGoogle,
+  createAccesToken,
+  validateInput,
+} from '../../utils';
+import { GoogleAuthInput, GoogleAuthPayload } from './googleAuth';
 import LoginInput from './login/LoginInput';
 import LoginPayload from './login/LoginPayload';
 import { SignupInput, SignupPayload } from './signup';
@@ -34,6 +40,19 @@ export default class UserResolver {
     @Arg('input') { email, password }: LoginInput,
   ): Promise<LoginPayload> {
     const user = await authenticate(email, password);
+
+    if (!user) return {};
+
+    const accesToken = await createAccesToken(user);
+
+    return { accesToken };
+  }
+
+  @Mutation(() => GoogleAuthPayload)
+  async googleAuth(
+    @Arg('input') { idToken }: GoogleAuthInput,
+  ): Promise<GoogleAuthPayload> {
+    const user = await authenticateWithGoogle(idToken);
 
     if (!user) return {};
 
