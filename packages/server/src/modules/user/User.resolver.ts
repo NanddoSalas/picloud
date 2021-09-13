@@ -1,7 +1,9 @@
 import { Arg, Ctx, Mutation, Query, Resolver } from 'type-graphql';
 import { User } from '../../entities';
 import { Context } from '../../types';
-import { validateInput } from '../../utils';
+import { authenticate, createAccesToken, validateInput } from '../../utils';
+import LoginInput from './login/LoginInput';
+import LoginPayload from './login/LoginPayload';
 import { SignupInput, SignupPayload } from './signup';
 
 @Resolver()
@@ -25,5 +27,18 @@ export default class UserResolver {
     await user.save();
 
     return { user };
+  }
+
+  @Mutation(() => LoginPayload)
+  async login(
+    @Arg('input') { email, password }: LoginInput,
+  ): Promise<LoginPayload> {
+    const user = await authenticate(email, password);
+
+    if (!user) return {};
+
+    const accesToken = await createAccesToken(user);
+
+    return { accesToken };
   }
 }
