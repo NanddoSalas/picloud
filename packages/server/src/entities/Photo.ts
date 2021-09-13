@@ -1,11 +1,14 @@
+/* eslint-disable import/no-cycle */
 import { Field, ID, ObjectType } from 'type-graphql';
 import {
   BaseEntity,
   Column,
   CreateDateColumn,
   Entity,
+  ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
+import { User } from '.';
 
 @Entity()
 @ObjectType()
@@ -25,4 +28,7 @@ export default class Photo extends BaseEntity {
   @Field()
   @CreateDateColumn()
   createdAt: Date;
+
+  @ManyToOne(() => User, (user) => user.photos)
+  owner: Promise<User>;
 }

@@ -1,3 +1,4 @@
+/* eslint-disable import/no-cycle */
 import bcrypt from 'bcrypt';
 import { Field, ID, ObjectType } from 'type-graphql';
 import {
@@ -5,8 +6,10 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
+import { Photo } from '.';
 
 @Entity()
 @ObjectType()
@@ -34,6 +37,9 @@ export default class User extends BaseEntity {
 
   @Column({ default: 0 })
   tokenVersion: number;
+
+  @OneToMany(() => Photo, (photo) => photo.owner)
+  photos: Promise<Photo[]>;
 
   async setPassword(password: string) {
     this.hashedPassword = await bcrypt.hash(password, 10);
