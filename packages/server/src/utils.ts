@@ -2,6 +2,7 @@ import { validate } from 'class-validator';
 import { Request } from 'express';
 import jwt from 'jsonwebtoken';
 import { User } from './entities';
+import oAuth2Client from './oAuth2Client';
 import { InputError } from './objectTypes';
 
 export const getUser = async (req: Request) => {
@@ -67,4 +68,28 @@ export const authenticate = async (email: string, password: string) => {
   if (authenticated) return user;
 
   return undefined;
+};
+
+export const authenticateWithGoogle = async (idToken: string) => {
+  try {
+    const loginTicket = await oAuth2Client.verifyIdToken({
+      idToken,
+      audience: process.env.CLIENT_ID,
+    });
+    const payload = loginTicket.getPayload();
+
+    if (!payload) return undefined;
+
+    const user = await User.findOne({ where: { googleId: payload.sub } });
+
+    if (user) return user;
+
+    return await User.create({
+      name: payload.name,
+      googleId: payload.sub,
+    }).save();
+  } catch (error) {
+    console.log(error);
+    return undefined;
+  }
 };
