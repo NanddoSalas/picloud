@@ -12,7 +12,9 @@ export const getUser = async (req: Request) => {
 
     try {
       const payload = jwt.verify(accesToken, process.env.SECRET_KEY!);
-      const user = await User.findOne({ where: { id: (payload as any).id } });
+      const user = await User.findOne({
+        where: { id: (payload as any).userId },
+      });
 
       if (user?.tokenVersion === (payload as any).tokenVersion) return user;
     } catch (err) {
@@ -51,4 +53,18 @@ export const validateInput = async (
   });
 
   return formattedErrors;
+};
+
+export const authenticate = async (email: string, password: string) => {
+  const user = await User.findOne({
+    where: {
+      email,
+    },
+  });
+
+  const authenticated = await user?.checkPassword(password);
+
+  if (authenticated) return user;
+
+  return undefined;
 };
