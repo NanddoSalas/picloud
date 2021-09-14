@@ -1,9 +1,13 @@
 import { validate } from 'class-validator';
 import { Request } from 'express';
+import FileType from 'file-type';
+import { FileUpload } from 'graphql-upload';
 import jwt from 'jsonwebtoken';
-import { User } from './entities';
+import { v4 } from 'uuid';
+import { Photo, User } from './entities';
 import oAuth2Client from './oAuth2Client';
 import { InputError } from './objectTypes';
+import storage from './storage';
 
 export const getUser = async (req: Request) => {
   const bearerHeader = req.headers.authorization;
@@ -90,6 +94,49 @@ export const authenticateWithGoogle = async (idToken: string) => {
     }).save();
   } catch (error) {
     console.log(error);
+    return undefined;
+  }
+};
+
+export const validateAndUploadPhoto = async (
+  file: Promise<FileUpload>,
+  user: User,
+) => {
+  try {
+    const { createReadStream } = await file;
+
+    const validationStream = createReadStream();
+    const uploadStream = createReadStream();
+
+    const fileTypeResult = await FileType.fromStream(validationStream);
+    const mime = fileTypeResult?.mime;
+
+    if (!mime?.includes('image/')) return undefined;
+
+    const fileName = v4();
+
+    const newFile = storage.bucket(process.env.BUCKET_NAME!).file(fileName);
+
+    await new Promise((res, rej) => {
+      uploadStream.pipe(
+        newFile
+          .createWriteStream({
+            gzip: true,
+            resumable: false,
+            contentType: mime,
+          })
+          .on('finish', res)
+          .on('error', rej),
+      );
+    });
+
+    const photo = new Photo();
+    photo.fileName = fileName;
+    photo.owner = Promise.resolve(user);
+    await photo.save();
+
+    return photo;
+  } catch (error) {
     return undefined;
   }
 };
