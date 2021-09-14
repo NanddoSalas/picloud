@@ -29,6 +29,9 @@ export default class Photo extends BaseEntity {
   @CreateDateColumn()
   createdAt: Date;
 
+  @Column()
+  ownerId: number;
+
   @ManyToOne(() => User, (user) => user.photos)
   owner: Promise<User>;
 }
