@@ -1,5 +1,5 @@
 {
-  "name": "picloudstorage",
+  "name": "picloud",
   "private": true,
   "workspaces": [
     "packages/*"
