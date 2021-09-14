@@ -4,6 +4,7 @@ import Auth from '../../decorators/Auth';
 import { Photo } from '../../entities';
 import { Context } from '../../types';
 import { validateAndUploadPhoto } from '../../utils';
+import { DeletePhotoInput, DeletePhotoPayload } from './deletePhoto';
 import PhotosArgs from './photos/PhotosArgs';
 import PhotosPayload from './photos/PhotosPayload';
 import { UploadPhotoInput, UploadPhotoPayload } from './uploadPhoto';
@@ -39,5 +40,20 @@ export default class PhotoResolver {
     const nextCursor = photos[photos.length - 1].id;
 
     return { photos, nextCursor };
+  }
+
+  @Auth()
+  @Mutation(() => DeletePhotoPayload)
+  async deletePhoto(
+    @Arg('input') { id }: DeletePhotoInput,
+    @Ctx() { user }: Context,
+  ): Promise<DeletePhotoPayload> {
+    const { affected } = await Photo.createQueryBuilder()
+      .delete()
+      .where('id = :id', { id })
+      .andWhere('ownerId = :userId', { userId: user!.id })
+      .execute();
+
+    return { deletedPhotoId: affected ? id : undefined };
   }
 }
