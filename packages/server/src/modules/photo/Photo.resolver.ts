@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/indent */
 import { Arg, Args, Ctx, Mutation, Query, Resolver } from 'type-graphql';
-import Auth from '../../decorators/Auth';
+import { Auth } from '../../decorators';
 import { Photo } from '../../entities';
 import { Context } from '../../types';
 import { validateAndUploadPhoto } from '../../utils';

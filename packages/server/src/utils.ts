@@ -93,7 +93,6 @@ export const authenticateWithGoogle = async (idToken: string) => {
       googleId: payload.sub,
     }).save();
   } catch (error) {
-    console.log(error);
     return undefined;
   }
 };
