@@ -1,0 +1,5 @@
+mutation DeletePhoto($deletePhotoInput: DeletePhotoInput!) {
+  deletePhoto(input: $deletePhotoInput) {
+    deletedPhotoId
+  }
+}
