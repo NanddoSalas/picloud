@@ -1,0 +1,10 @@
+query Photos($photosLimit: Int, $photosCursor: ID) {
+  photos(limit: $photosLimit, cursor: $photosCursor) {
+    photos {
+      createdAt
+      url
+      id
+    }
+    nextCursor
+  }
+}
