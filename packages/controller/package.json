@@ -1,0 +1,21 @@
+{
+  "name": "@picloud/controller",
+  "version": "0.1.0",
+  "main": "dist/index.js",
+  "typings": "dist/index.d.ts",
+  "license": "MIT",
+  "dependencies": {
+    "@apollo/client": "^3.4.12",
+    "graphql": "^15.5.3"
+  },
+  "devDependencies": {
+    "@graphql-codegen/cli": "2.2.0",
+    "@graphql-codegen/typescript": "2.2.2",
+    "@graphql-codegen/typescript-operations": "2.1.4",
+    "@graphql-codegen/typescript-react-apollo": "3.1.4",
+    "typescript": "^4.4.3"
+  },
+  "scripts": {
+    "build": "lerna run build --scope @picloud/server && graphql-codegen --config codegen.yml && tsc"
+  }
+}

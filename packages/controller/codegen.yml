@@ -1,0 +1,9 @@
+overwrite: true
+schema: '../server/dist/schema.gql'
+documents: 'src/**/*.gql'
+generates:
+  dist/index.tsx:
+    plugins:
+      - 'typescript'
+      - 'typescript-operations'
+      - 'typescript-react-apollo'
