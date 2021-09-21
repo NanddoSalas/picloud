@@ -1,19 +1,23 @@
+/* eslint-disable object-curly-newline */
+import { ApolloProvider } from '@apollo/client';
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import client from './client';
+import GalleryContext from './context/GalleryContext';
+import useGallery from './hooks/useGallery';
+import Navigation from './Navigation';
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+const App = () => {
+  const { folders, getBackground, getPhotos, reload } = useGallery();
 
-const App = () => (
-  <View style={styles.container}>
-    <Text>Hello World!</Text>
-  </View>
-);
+  return (
+    <ApolloProvider client={client}>
+      <GalleryContext.Provider
+        value={{ folders, getBackground, getPhotos, reload }}
+      >
+        <Navigation />
+      </GalleryContext.Provider>
+    </ApolloProvider>
+  );
+};
 
 export default App;
