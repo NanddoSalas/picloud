@@ -1,5 +1,3 @@
-/* eslint-disable operator-linebreak */
-/* eslint-disable object-curly-newline */
 import { useMeQuery } from '@picloud/controller';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { NavigationContainer } from '@react-navigation/native';

@@ -2,5 +2,8 @@
   "extends": ["airbnb", "airbnb-typescript"],
   "parserOptions": {
     "project": "packages/app/tsconfig.json"
+  },
+  "rules": {
+    "object-curly-newline": "off"
   }
 }

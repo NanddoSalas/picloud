@@ -1,4 +1,3 @@
-/* eslint-disable object-curly-newline */
 import * as MediaLibrary from 'expo-media-library';
 import { useEffect, useState } from 'react';
 import { Photo } from '../types';

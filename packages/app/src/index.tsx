@@ -1,4 +1,3 @@
-/* eslint-disable object-curly-newline */
 import { ApolloProvider } from '@apollo/client';
 import React from 'react';
 import client from './client';
