@@ -1,12 +1,7 @@
+/* eslint-disable object-curly-newline */
 import * as MediaLibrary from 'expo-media-library';
 import { useEffect, useState } from 'react';
-
-type Photo = {
-  id: string;
-  filename: string;
-  creationTime: number;
-  uri: string;
-};
+import { Photo } from '../types';
 
 interface GalleryInterface {
   [folderName: string]: Photo[];
@@ -60,6 +55,7 @@ const useGallery = () => {
     const { assets, hasNextPage, endCursor } =
       await MediaLibrary.getAssetsAsync({
         mediaType: 'photo',
+        sortBy: 'creationTime',
         after: cursor,
       });
 
@@ -69,6 +65,11 @@ const useGallery = () => {
   };
 
   const getPhotos = (folderName: string) => gallery[folderName];
+
+  const getBackground = (folderName: string) => {
+    const photos = gallery[folderName];
+    return photos[0].uri;
+  };
 
   const reload = () => {
     setFolders([]);
@@ -80,7 +81,7 @@ const useGallery = () => {
     main();
   }, []);
 
-  return { folders, getPhotos, reload };
+  return { folders, getPhotos, getBackground, reload };
 };
 
 export default useGallery;
