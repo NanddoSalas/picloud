@@ -1,9 +1,11 @@
-export type Photo = {
-  id: string;
+export type PhotoId = number | string;
+
+export interface Photo {
+  id: PhotoId;
   filename: string;
   creationTime: number;
   uri: string;
-};
+}
 
 export type StackParams = {
   Login: undefined;
