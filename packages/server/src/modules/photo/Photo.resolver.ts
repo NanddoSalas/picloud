@@ -37,7 +37,8 @@ export default class PhotoResolver {
     query.orderBy('photo.id', 'DESC').take(limit);
 
     const photos = await query.getMany();
-    const nextCursor = photos[photos.length - 1].id;
+
+    const nextCursor = photos[photos.length - 1]?.id;
 
     return { photos, nextCursor };
   }
