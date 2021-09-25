@@ -1,9 +1,10 @@
-import { ApolloClient, createHttpLink, InMemoryCache } from '@apollo/client';
+import { ApolloClient, InMemoryCache } from '@apollo/client';
 import { setContext } from '@apollo/client/link/context';
+import { createUploadLink } from 'apollo-upload-client';
 import Constants from 'expo-constants';
 import { getItemAsync } from 'expo-secure-store';
 
-const httpLink = createHttpLink({
+const httpLink = createUploadLink({
   uri: Constants.manifest?.extra!.GRAPHQL_URI,
 });
 
