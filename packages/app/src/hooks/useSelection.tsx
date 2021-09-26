@@ -1,11 +1,11 @@
 import { useState } from 'react';
 
-const useSelection = <T extends {}>() => {
+const useSelection = () => {
   const [isSelectionEnabled, setIsSelectionEnabled] = useState(false);
-  const [selectedItems, setSelectedItems] = useState<T[]>([]);
+  const [selectedItems, setSelectedItems] = useState<number[]>([]);
 
-  const enableSelection = (value?: T) => {
-    if (value) setSelectedItems([value]);
+  const enableSelection = (id?: number) => {
+    if (id) setSelectedItems([id]);
     else setSelectedItems([]);
     setIsSelectionEnabled(true);
   };
@@ -15,17 +15,17 @@ const useSelection = <T extends {}>() => {
     setSelectedItems([]);
   };
 
-  const handleSelection = (value: T) => {
-    const index = selectedItems.indexOf(value);
+  const handleSelection = (id: number) => {
+    const index = selectedItems.indexOf(id);
 
     if (index === -1) {
-      setSelectedItems((current) => [...current, value]);
+      setSelectedItems((current) => [...current, id]);
     } else if (selectedItems.length === 1) {
       disableSelection();
-    } else setSelectedItems((current) => current.filter((v) => v !== value));
+    } else setSelectedItems((current) => current.filter((v) => v !== id));
   };
 
-  const selectAll = (value: T[]) => setSelectedItems(value);
+  const selectAll = (id: number[]) => setSelectedItems(id);
 
   const deselectAll = () => setSelectedItems([]);
 
