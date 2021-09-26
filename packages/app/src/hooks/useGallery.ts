@@ -26,8 +26,7 @@ const useGallery = () => {
   };
 
   const insertAssets = (assets: MediaLibrary.Asset[]) => {
-    // eslint-disable-next-line object-curly-newline
-    assets.forEach(({ id, filename, uri, creationTime }) => {
+    assets.forEach(({ id, uri, creationTime }) => {
       const folderName = getFolderName(uri);
 
       setGallery((currentGallery) => {
@@ -36,10 +35,9 @@ const useGallery = () => {
         if (!newGallery[folderName]) newGallery[folderName] = [];
 
         newGallery[folderName].push({
-          creationTime,
-          filename,
-          id,
           uri,
+          id: parseInt(id, 10),
+          createdAt: creationTime,
         });
 
         return newGallery;
