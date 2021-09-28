@@ -2,9 +2,9 @@ import { useState } from 'react';
 
 const useSelection = () => {
   const [isSelectionEnabled, setIsSelectionEnabled] = useState(false);
-  const [selectedItems, setSelectedItems] = useState<number[]>([]);
+  const [selectedItems, setSelectedItems] = useState<string[]>([]);
 
-  const enableSelection = (id?: number) => {
+  const enableSelection = (id?: string) => {
     if (id) setSelectedItems([id]);
     else setSelectedItems([]);
     setIsSelectionEnabled(true);
@@ -15,7 +15,7 @@ const useSelection = () => {
     setSelectedItems([]);
   };
 
-  const handleSelection = (id: number) => {
+  const handleSelection = (id: string) => {
     const index = selectedItems.indexOf(id);
 
     if (index === -1) {
@@ -25,7 +25,7 @@ const useSelection = () => {
     } else setSelectedItems((current) => current.filter((v) => v !== id));
   };
 
-  const selectAll = (id: number[]) => setSelectedItems(id);
+  const selectAll = (id: string[]) => setSelectedItems(id);
 
   const deselectAll = () => setSelectedItems([]);
 
