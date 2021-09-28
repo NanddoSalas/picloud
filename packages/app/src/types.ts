@@ -1,3 +1,5 @@
+import React from 'react';
+
 export type StackParams = {
   Login: undefined;
   Signup: undefined;
@@ -12,4 +14,10 @@ export type StackParams = {
 export type TabParams = {
   Photos: undefined;
   Gallery: undefined;
+};
+
+export type HeaderOperation = {
+  name: string;
+  icon: () => React.ReactElement;
+  onPress: (selectedItems: any[]) => void;
 };

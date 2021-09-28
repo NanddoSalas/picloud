@@ -1,30 +1,27 @@
-import { AntDesign, MaterialIcons } from '@expo/vector-icons';
+import { AntDesign } from '@expo/vector-icons';
 import { useHeaderHeight } from '@react-navigation/elements';
 import React from 'react';
 import { Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { HeaderOperation } from '../types';
 import TouchableIcon from './TouchableIcon';
 
 interface SelectionHeaderProps {
   title: string;
   isSelectionEnabled: boolean;
-  selectedItems: any[];
+  selectedItems: string[];
+  operations: HeaderOperation[];
   onGoBack: () => void;
   onDisableSelection: () => void;
-  onSelectAll: () => void;
-  onBuckup: () => void;
-  onDelete: () => void;
 }
 
-const ImageSelectionHeader: React.FC<SelectionHeaderProps> = ({
+const SelectionHeader: React.FC<SelectionHeaderProps> = ({
   title,
   isSelectionEnabled,
   selectedItems,
-  onDisableSelection,
+  operations,
   onGoBack,
-  onSelectAll,
-  onBuckup,
-  onDelete,
+  onDisableSelection,
 }) => {
   const insets = useSafeAreaInsets();
   const headerHeight = useHeaderHeight();
@@ -61,24 +58,18 @@ const ImageSelectionHeader: React.FC<SelectionHeaderProps> = ({
             justifyContent: 'flex-end',
           }}
         >
-          <TouchableIcon
-            onPress={onSelectAll}
-            icon={() => (
-              <MaterialIcons name="select-all" size={26} color="black" />
-            )}
-          />
-          <TouchableIcon
-            onPress={onBuckup}
-            icon={() => <MaterialIcons name="backup" size={26} color="black" />}
-          />
-          <TouchableIcon
-            onPress={onDelete}
-            icon={() => <AntDesign name="delete" size={26} color="black" />}
-          />
+          {operations.map(({ icon, onPress }, index) => (
+            <TouchableIcon
+              // eslint-disable-next-line react/no-array-index-key
+              key={index}
+              icon={icon}
+              onPress={() => onPress(selectedItems)}
+            />
+          ))}
         </View>
       )}
     </View>
   );
 };
 
-export default ImageSelectionHeader;
+export default SelectionHeader;
