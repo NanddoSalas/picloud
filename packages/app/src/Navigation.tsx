@@ -5,7 +5,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import AppLoading from 'expo-app-loading';
 import React from 'react';
 import AccountButton from './components/AccountButton';
-import { Account, Folder, Gallery, Login, Photos, Signup } from './screens';
+import { Account, Album, Gallery, Login, Photos, Signup } from './screens';
 import { StackParams, TabParams } from './types';
 
 const Stack = createNativeStackNavigator<StackParams>();
@@ -39,7 +39,7 @@ const Navigation = () => {
               options={{ headerRight: () => <AccountButton /> }}
             />
             <Stack.Screen name="Account" component={Account} />
-            <Stack.Screen name="Folder" component={Folder} />
+            <Stack.Screen name="Album" component={Album} />
           </>
         )}
       </Stack.Navigator>
