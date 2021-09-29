@@ -3475,6 +3475,11 @@
   resolved "https://registry.yarnpkg.com/@react-navigation/elements/-/elements-1.1.0.tgz#483155ccf5a8f18d015db283bed34cc2255e2e9e"
   integrity sha512-jZncciZPGuoP6B6f+Wpf6MYSSYy86B2HJDbFTCtT5xZV0w6V9GgCeqvSTOEAxifZrmKl8uDxsr0GrIxgQE8NxA==
 
+"@react-navigation/elements@^1.1.2":
+  version "1.1.2"
+  resolved "https://registry.yarnpkg.com/@react-navigation/elements/-/elements-1.1.2.tgz#82d8978489e47e7c54f67c453ba4a124046fe253"
+  integrity sha512-PbPCleC1HpUlXtuP0DFNCNTEhRLd6lmB0KxY0SGRGqCemS3HpG/PajEQ1LDe7S51M03a1tDby1MfKTkNanUXAg==
+
 "@react-navigation/native-stack@^6.1.0":
   version "6.1.0"
   resolved "https://registry.yarnpkg.com/@react-navigation/native-stack/-/native-stack-6.1.0.tgz#32e50d07bc8d9669d65f72dc4ffec2a6cc9ef379"
@@ -7746,6 +7751,11 @@ expo-font@~9.2.1:
   dependencies:
     expo-modules-core "~0.2.0"
     fontfaceobserver "^2.1.0"
+
+expo-haptics@^10.1.0:
+  version "10.1.0"
+  resolved "https://registry.yarnpkg.com/expo-haptics/-/expo-haptics-10.1.0.tgz#2ef5f0c3442f57844f7a7a961d922872e4ea9a71"
+  integrity sha512-2rpixkP3LSCwaJAmbbs0CSqbY7lSk7Ytay4UAYWg3YiJ05My7+MGMPbQJARyAMI5JQNuzcdsZN74btSusBvgYQ==
 
 expo-keep-awake@~9.2.0:
   version "9.2.0"
