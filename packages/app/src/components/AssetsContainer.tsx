@@ -1,7 +1,7 @@
 import React from 'react';
 import { ScrollView, View } from 'react-native';
 
-const SelectableImagesContainer: React.FC = ({ children }) => (
+const AssetsContainer: React.FC = ({ children }) => (
   <View style={{ flex: 1 }}>
     <ScrollView>
       <View
@@ -10,6 +10,7 @@ const SelectableImagesContainer: React.FC = ({ children }) => (
           flexWrap: 'wrap',
           flexDirection: 'row',
           marginRight: -1,
+          marginBottom: -1,
         }}
       >
         {children}
@@ -18,4 +19,4 @@ const SelectableImagesContainer: React.FC = ({ children }) => (
   </View>
 );
 
-export default SelectableImagesContainer;
+export default AssetsContainer;

@@ -6,36 +6,35 @@ import {
   useWindowDimensions,
   View,
 } from 'react-native';
-import { PhotoId } from '../types';
 
-interface SelectableImageProps {
-  handleLongPress: (id: PhotoId) => void;
-  handlePress: (id: PhotoId, index: number) => void;
-  isSelectionEnabled: boolean;
-  isSelected: boolean;
-  index: number;
-  minWH: number;
+interface AssetProps {
+  id: string;
   uri: string;
-  id: PhotoId;
+  index: number;
+  minwh: number;
+  isSelected: boolean;
+  isSelectionEnabled: boolean;
+  handleLongPress: (id: string) => void;
+  handlePress: (id: string, index: number) => void;
 }
 
-const SelectableImage: React.FC<SelectableImageProps> = ({
-  handleLongPress,
-  handlePress,
+const Asset: React.FC<AssetProps> = ({
   id,
+  uri,
   index,
+  minwh,
   isSelected,
   isSelectionEnabled,
-  minWH,
-  uri,
+  handleLongPress,
+  handlePress,
 }) => {
   const { width } = useWindowDimensions();
 
-  const imagesPerLine = Math.trunc(width / minWH);
-  const wh = (width - (imagesPerLine - 1)) / imagesPerLine;
+  const assetsPerLine = Math.trunc(width / minwh);
+  const wh = (width - (assetsPerLine - 1)) / assetsPerLine;
 
   return (
-    <View key={id}>
+    <View>
       <TouchableWithoutFeedback
         onLongPress={() => handleLongPress(id)}
         onPress={() => handlePress(id, index)}
@@ -76,4 +75,4 @@ const SelectableImage: React.FC<SelectableImageProps> = ({
   );
 };
 
-export default SelectableImage;
+export default Asset;
