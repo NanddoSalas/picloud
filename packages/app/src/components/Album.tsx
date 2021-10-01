@@ -1,8 +1,8 @@
 import * as MediaLibrary from 'expo-media-library';
+import { Text } from 'native-base';
 import React, { useEffect, useState } from 'react';
 import {
   Image,
-  Text,
   TouchableHighlight,
   useWindowDimensions,
   View,
@@ -48,7 +48,7 @@ const Album: React.FC<AlbumProps> = ({ albumId, albumName, onPress }) => {
           style={{ width: 150, height: 150, borderRadius: 10 }}
         />
       </TouchableHighlight>
-      <Text>{albumName}</Text>
+      <Text color="lightText">{albumName}</Text>
     </View>
   );
 };

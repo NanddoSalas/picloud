@@ -1,4 +1,5 @@
 import { MaterialIcons } from '@expo/vector-icons';
+import { useTheme } from '@react-navigation/native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import * as Haptics from 'expo-haptics';
 import * as MediaLibrary from 'expo-media-library';
@@ -15,6 +16,7 @@ const Album: React.FC<NativeStackScreenProps<StackParams, 'Album'>> = ({
   route,
   navigation,
 }) => {
+  const { colors } = useTheme();
   const { albumId, albumName } = route.params;
   const [assets, setAssets] = useState<MediaLibrary.Asset[]>([]);
   const {
@@ -40,7 +42,11 @@ const Album: React.FC<NativeStackScreenProps<StackParams, 'Album'>> = ({
             {
               name: 'Select All',
               icon: () => (
-                <MaterialIcons name="select-all" size={26} color="black" />
+                <MaterialIcons
+                  name="select-all"
+                  size={26}
+                  color={colors.text}
+                />
               ),
               onPress: () => selectAll(assets.map(({ id }) => id)),
             },

@@ -1,5 +1,6 @@
 import { AntDesign } from '@expo/vector-icons';
 import { useHeaderHeight } from '@react-navigation/elements';
+import { useTheme } from '@react-navigation/native';
 import React from 'react';
 import { Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -23,6 +24,7 @@ const SelectionHeader: React.FC<SelectionHeaderProps> = ({
   onGoBack,
   onDisableSelection,
 }) => {
+  const { colors } = useTheme();
   const insets = useSafeAreaInsets();
   const headerHeight = useHeaderHeight();
 
@@ -34,6 +36,7 @@ const SelectionHeader: React.FC<SelectionHeaderProps> = ({
         display: 'flex',
         flexDirection: 'row',
         alignItems: 'center',
+        backgroundColor: colors.card,
       }}
     >
       <TouchableIcon
@@ -42,11 +45,11 @@ const SelectionHeader: React.FC<SelectionHeaderProps> = ({
           <AntDesign
             name={isSelectionEnabled ? 'close' : 'arrowleft'}
             size={26}
-            color="black"
+            color={colors.text}
           />
         )}
       />
-      <Text style={{ fontSize: 20 }}>
+      <Text style={{ fontSize: 20, color: colors.text }}>
         {isSelectionEnabled ? selectedItems.length.toString() : title}
       </Text>
       {isSelectionEnabled && (
