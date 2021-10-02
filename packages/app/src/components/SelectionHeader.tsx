@@ -1,7 +1,8 @@
-import { AntDesign } from '@expo/vector-icons';
+import { AntDesign, MaterialIcons } from '@expo/vector-icons';
 import { useHeaderHeight } from '@react-navigation/elements';
 import { useTheme } from '@react-navigation/native';
-import React from 'react';
+import { Actionsheet } from 'native-base';
+import React, { useState } from 'react';
 import { Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { HeaderOperation } from '../types';
@@ -24,6 +25,7 @@ const SelectionHeader: React.FC<SelectionHeaderProps> = ({
   onGoBack,
   onDisableSelection,
 }) => {
+  const [showActionsSheet, setShowActionsSheet] = useState(false);
   const { colors } = useTheme();
   const insets = useSafeAreaInsets();
   const headerHeight = useHeaderHeight();
@@ -61,16 +63,57 @@ const SelectionHeader: React.FC<SelectionHeaderProps> = ({
             justifyContent: 'flex-end',
           }}
         >
-          {operations.map(({ icon, onPress }, index) => (
-            <TouchableIcon
-              // eslint-disable-next-line react/no-array-index-key
-              key={index}
-              icon={icon}
-              onPress={() => onPress(selectedItems)}
-            />
-          ))}
+          {operations.map(({ icon, onPress, position, name }) => {
+            if (position === 'header') {
+              return (
+                <TouchableIcon
+                  // eslint-disable-next-line react/no-array-index-key
+                  key={name}
+                  icon={icon}
+                  onPress={() => onPress(selectedItems)}
+                />
+              );
+            }
+
+            return null;
+          })}
+          <TouchableIcon
+            icon={() => (
+              <MaterialIcons name="more-vert" size={26} color={colors.text} />
+            )}
+            onPress={() => setShowActionsSheet(true)}
+          />
         </View>
       )}
+
+      <Actionsheet
+        isOpen={showActionsSheet}
+        onClose={() => setShowActionsSheet(false)}
+      >
+        <Actionsheet.Content bgColor={colors.card}>
+          {operations.map(({ icon, name, onPress, position }) => {
+            if (position === 'actionsSheet') {
+              return (
+                <Actionsheet.Item
+                  key={name}
+                  startIcon={icon()}
+                  onPress={() => onPress(selectedItems)}
+                  _text={{
+                    color: colors.text,
+                  }}
+                  _pressed={{
+                    bgColor: colors.border,
+                  }}
+                >
+                  {name}
+                </Actionsheet.Item>
+              );
+            }
+
+            return null;
+          })}
+        </Actionsheet.Content>
+      </Actionsheet>
     </View>
   );
 };

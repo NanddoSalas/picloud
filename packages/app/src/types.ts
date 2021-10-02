@@ -19,4 +19,5 @@ export type HeaderOperation = {
   name: string;
   icon: () => React.ReactElement;
   onPress: (selectedItems: any[]) => void;
+  position: 'header' | 'actionsSheet';
 };
