@@ -61,6 +61,14 @@ const Album: React.FC<NativeStackScreenProps<StackParams, 'Album'>> = ({
               onPress: (ids) => backUpAssets(ids),
               position: 'actionsSheet',
             },
+            {
+              name: 'Delete from device',
+              icon: () => (
+                <MaterialIcons name="delete" size={26} color={colors.text} />
+              ),
+              onPress: async (ids) => MediaLibrary.deleteAssetsAsync(ids),
+              position: 'actionsSheet',
+            },
           ]}
           // eslint-disable-next-line react/prop-types
           onGoBack={navigation.goBack}
@@ -84,6 +92,48 @@ const Album: React.FC<NativeStackScreenProps<StackParams, 'Album'>> = ({
     };
 
     getAssets();
+
+    const listener = MediaLibrary.addListener(
+      ({
+        hasIncrementalChanges,
+        deletedAssets,
+        insertedAssets,
+        updatedAssets,
+      }) => {
+        if (hasIncrementalChanges) {
+          if (insertedAssets) {
+            setAssets((current) => [...current, ...insertedAssets]);
+          } else if (deletedAssets) {
+            setAssets((current) => {
+              const deletedAssetsId = deletedAssets.map(({ id }) => id);
+
+              const newState = current.filter(
+                ({ id }) => !deletedAssetsId.includes(id),
+              );
+
+              return newState;
+            });
+          } else if (updatedAssets) {
+            setAssets((current) => {
+              const updatedAssetsId = updatedAssets.map(({ id }) => id);
+
+              return current.map((asset) => {
+                const index = updatedAssetsId.indexOf(asset.id);
+
+                if (index) return updatedAssets[index];
+
+                return asset;
+              });
+            });
+          }
+        } else {
+          setAssets([]);
+          getAssets();
+        }
+      },
+    );
+
+    return listener.remove;
   }, []);
 
   const handlePress = (id: string, index: number) => {
