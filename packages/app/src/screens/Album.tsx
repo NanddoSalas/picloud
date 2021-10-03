@@ -3,11 +3,12 @@ import { useTheme } from '@react-navigation/native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import * as Haptics from 'expo-haptics';
 import * as MediaLibrary from 'expo-media-library';
-import React, { useEffect, useLayoutEffect, useState } from 'react';
+import React, { useContext, useEffect, useLayoutEffect, useState } from 'react';
 import ImageView from 'react-native-image-viewing';
 import Asset from '../components/Asset';
 import AssetsContainer from '../components/AssetsContainer';
 import SelectionHeader from '../components/SelectionHeader';
+import BackupContext from '../context/BackupContext';
 import useImageView from '../hooks/useImageView';
 import useSelection from '../hooks/useSelection';
 import { StackParams } from '../types';
@@ -19,6 +20,7 @@ const Album: React.FC<NativeStackScreenProps<StackParams, 'Album'>> = ({
   const { colors } = useTheme();
   const { albumId, albumName } = route.params;
   const [assets, setAssets] = useState<MediaLibrary.Asset[]>([]);
+  const { backUpAssets } = useContext(BackupContext);
   const {
     isSelectionEnabled,
     selectedItems,
@@ -49,6 +51,15 @@ const Album: React.FC<NativeStackScreenProps<StackParams, 'Album'>> = ({
                 />
               ),
               onPress: () => selectAll(assets.map(({ id }) => id)),
+              position: 'header',
+            },
+            {
+              name: 'Buck Up',
+              icon: () => (
+                <MaterialIcons name="backup" size={26} color={colors.text} />
+              ),
+              onPress: (ids) => backUpAssets(ids),
+              position: 'actionsSheet',
             },
           ]}
           // eslint-disable-next-line react/prop-types
