@@ -30,6 +30,7 @@ export default {
     },
     extra: {
       GRAPHQL_URI: process.env.GRAPHQL_URI,
+      expoClientId: process.env.EXPO_CLIENT_ID,
     },
   },
 };
