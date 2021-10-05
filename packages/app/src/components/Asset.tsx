@@ -1,17 +1,12 @@
 import { Feather } from '@expo/vector-icons';
 import React from 'react';
-import {
-  Image,
-  TouchableWithoutFeedback,
-  useWindowDimensions,
-  View,
-} from 'react-native';
+import { Image, TouchableWithoutFeedback, View } from 'react-native';
 
 interface AssetProps {
   id: string;
   uri: string;
   index: number;
-  minwh: number;
+  assetWidth: number;
   isSelected: boolean;
   isSelectionEnabled: boolean;
   handleLongPress: (id: string) => void;
@@ -22,57 +17,50 @@ const Asset: React.FC<AssetProps> = ({
   id,
   uri,
   index,
-  minwh,
+  assetWidth,
   isSelected,
   isSelectionEnabled,
   handleLongPress,
   handlePress,
-}) => {
-  const { width } = useWindowDimensions();
-
-  const assetsPerLine = Math.trunc(width / minwh);
-  const wh = (width - (assetsPerLine - 1)) / assetsPerLine;
-
-  return (
-    <View>
-      <TouchableWithoutFeedback
-        onLongPress={() => handleLongPress(id)}
-        onPress={() => handlePress(id, index)}
+}) => (
+  <View>
+    <TouchableWithoutFeedback
+      onLongPress={() => handleLongPress(id)}
+      onPress={() => handlePress(id, index)}
+      style={{
+        width: assetWidth,
+        height: assetWidth,
+        marginBottom: 1,
+        marginRight: 1,
+      }}
+    >
+      <View
         style={{
-          width: wh,
-          height: wh,
+          width: assetWidth,
+          height: assetWidth,
           marginBottom: 1,
           marginRight: 1,
+          display: 'flex',
         }}
       >
-        <View
+        <Image
+          source={{ uri }}
           style={{
-            width: wh,
-            height: wh,
-            marginBottom: 1,
-            marginRight: 1,
-            display: 'flex',
+            width: assetWidth,
+            height: assetWidth,
           }}
-        >
-          <Image
-            source={{ uri }}
-            style={{
-              width: wh,
-              height: wh,
-            }}
+        />
+        {isSelectionEnabled && (
+          <Feather
+            name={isSelected ? 'check-circle' : 'circle'}
+            size={24}
+            color={isSelected ? 'black' : 'gray'}
+            style={{ position: 'absolute', margin: 5 }}
           />
-          {isSelectionEnabled && (
-            <Feather
-              name={isSelected ? 'check-circle' : 'circle'}
-              size={24}
-              color={isSelected ? 'black' : 'gray'}
-              style={{ position: 'absolute', margin: 5 }}
-            />
-          )}
-        </View>
-      </TouchableWithoutFeedback>
-    </View>
-  );
-};
+        )}
+      </View>
+    </TouchableWithoutFeedback>
+  </View>
+);
 
 export default Asset;

@@ -3,10 +3,11 @@ import { useTheme } from '@react-navigation/native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import * as Haptics from 'expo-haptics';
 import * as MediaLibrary from 'expo-media-library';
+import { Box } from 'native-base';
 import React, { useContext, useEffect, useLayoutEffect, useState } from 'react';
+import { FlatList, useWindowDimensions } from 'react-native';
 import ImageView from 'react-native-image-viewing';
 import Asset from '../components/Asset';
-import AssetsContainer from '../components/AssetsContainer';
 import SelectionHeader from '../components/SelectionHeader';
 import BackupContext from '../context/BackupContext';
 import useImageView from '../hooks/useImageView';
@@ -20,6 +21,7 @@ const Album: React.FC<NativeStackScreenProps<StackParams, 'Album'>> = ({
   const { colors } = useTheme();
   const { albumId, albumName } = route.params;
   const [assets, setAssets] = useState<MediaLibrary.Asset[]>([]);
+  const { width } = useWindowDimensions();
   const { backUpAssets } = useContext(BackupContext);
   const {
     isSelectionEnabled,
@@ -147,32 +149,48 @@ const Album: React.FC<NativeStackScreenProps<StackParams, 'Album'>> = ({
     Haptics.selectionAsync();
   };
 
+  const minAssetWidth = 100;
+
+  const assetsPerRow = Math.trunc(width / minAssetWidth);
+  const assetsWidth = width - (assetsPerRow - 1);
+  const assetWidth = assetsWidth / assetsPerRow;
+
   return (
-    <AssetsContainer>
+    <Box>
       <ImageView
         images={assets}
         visible={isVisible}
         imageIndex={imageIndex}
         onRequestClose={hiddeImageView}
       />
-      {assets.map(({ id, uri }, index) => {
-        const isSelected = selectedItems.includes(id);
+      <FlatList
+        data={assets}
+        renderItem={({ item, index }) => {
+          const isSelected = selectedItems.includes(item.id);
 
-        return (
-          <Asset
-            key={id}
-            id={id}
-            uri={uri}
-            index={index}
-            minwh={100}
-            isSelected={isSelected}
-            isSelectionEnabled={isSelectionEnabled}
-            handlePress={handlePress}
-            handleLongPress={handleLongPress}
-          />
-        );
-      })}
-    </AssetsContainer>
+          return (
+            <Asset
+              id={item.id}
+              uri={item.uri}
+              index={index}
+              assetWidth={assetWidth}
+              isSelected={isSelected}
+              isSelectionEnabled={isSelectionEnabled}
+              handlePress={handlePress}
+              handleLongPress={handleLongPress}
+            />
+          );
+        }}
+        keyExtractor={(item) => item.id}
+        initialNumToRender={20}
+        numColumns={assetsPerRow}
+        getItemLayout={(data, index) => ({
+          length: assetWidth,
+          offset: assetWidth * index,
+          index,
+        })}
+      />
+    </Box>
   );
 };
 
