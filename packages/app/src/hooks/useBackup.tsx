@@ -119,6 +119,11 @@ const useBackup = () => {
     insertBackedUpAssets(newAssets);
   };
 
+  const cleanup = () => {
+    setPending([]);
+    setBackedUpAssets([]);
+  };
+
   useEffect(() => {
     loadState();
   }, []);
@@ -134,7 +139,7 @@ const useBackup = () => {
     }
   }, [pending, uploading]);
 
-  return { backedUpAssets, backUpAssets, findBackedUpAsset };
+  return { backedUpAssets, backUpAssets, findBackedUpAsset, cleanup };
 };
 
 export default useBackup;
