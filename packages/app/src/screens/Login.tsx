@@ -18,6 +18,7 @@ import React from 'react';
 import { useForm } from 'react-hook-form';
 import { Keyboard } from 'react-native';
 import FieldInput from '../components/FieldInput';
+import useCleanup from '../hooks/useCleanup';
 
 const Login = () => {
   const client = useApolloClient();
@@ -25,6 +26,7 @@ const Login = () => {
   const { control, handleSubmit, setError } = useForm();
   const { colors } = useTheme();
   const [googleAuth] = useGoogleAuthMutation();
+  const cleanup = useCleanup();
   const [, , promptAsync] = Google.useAuthRequest({
     expoClientId: Constants.manifest?.extra!.expoClientId,
     responseType: ResponseType.IdToken,
@@ -45,7 +47,8 @@ const Login = () => {
 
     if (accesToken) {
       await setItemAsync('accesToken', accesToken);
-      client.refetchQueries({ include: ['Me'] });
+      await cleanup();
+      client.refetchQueries({ include: 'all' });
     } else {
       setError('email', {});
       setError('password', { message: 'Invalid Credentials' });
@@ -65,7 +68,8 @@ const Login = () => {
 
       if (accesToken) {
         await setItemAsync('accesToken', accesToken);
-        client.refetchQueries({ include: ['Me'] });
+        await cleanup();
+        client.refetchQueries({ include: 'all' });
       }
     }
   };
