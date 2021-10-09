@@ -97,7 +97,11 @@ const SelectionHeader: React.FC<SelectionHeaderProps> = ({
                 <Actionsheet.Item
                   key={name}
                   startIcon={icon()}
-                  onPress={() => onPress(selectedItems)}
+                  onPress={() => {
+                    onPress(selectedItems);
+                    onDisableSelection();
+                    setShowActionsSheet(false);
+                  }}
                   _text={{
                     color: colors.text,
                   }}
