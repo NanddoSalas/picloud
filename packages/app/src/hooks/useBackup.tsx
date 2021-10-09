@@ -1,8 +1,10 @@
 import { useUploadPhotoMutation } from '@picloud/controller';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { ReactNativeFile } from 'apollo-upload-client';
+import * as FileSystem from 'expo-file-system';
 import * as MediaLibrary from 'expo-media-library';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
+import PhotosContext from '../context/PhotosContext';
 
 type BackedUpAssetStatus = 'PENDING' | 'UPLOADING' | 'BACKEDUP' | 'ERROR';
 
@@ -17,6 +19,7 @@ const useBackup = () => {
   const [backedUpAssets, setBackedUpAssets] = useState<BackedUpAsset[]>([]);
   const [pending, setPending] = useState<BackedUpAsset[]>([]);
   const [uploading, setUploading] = useState(false);
+  const { addNewPhotos } = useContext(PhotosContext);
 
   const loadState = async () => {
     const state = await AsyncStorage.getItem('backedUpPhotos');
@@ -94,6 +97,20 @@ const useBackup = () => {
         uploadPhotoInput: {
           file: new ReactNativeFile({ uri, name: '', type: 'image/*' }),
         },
+      },
+      update: async (cache, res) => {
+        const photo = res.data?.uploadPhoto.photo;
+
+        if (photo) {
+          await FileSystem.copyAsync({
+            from: uri,
+            to: `${FileSystem.documentDirectory + photo.id}`,
+          });
+
+          await addNewPhotos([photo]);
+
+          // TODO: update cache
+        }
       },
     });
 
