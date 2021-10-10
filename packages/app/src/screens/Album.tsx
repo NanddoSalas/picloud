@@ -95,45 +95,40 @@ const Album: React.FC<NativeStackScreenProps<StackParams, 'Album'>> = ({
 
     getAssets();
 
-    const listener = MediaLibrary.addListener(
-      ({
-        hasIncrementalChanges,
-        deletedAssets,
-        insertedAssets,
-        updatedAssets,
-      }) => {
-        if (hasIncrementalChanges) {
-          if (insertedAssets) {
-            setAssets((current) => [...current, ...insertedAssets]);
-          } else if (deletedAssets) {
-            setAssets((current) => {
-              const deletedAssetsId = deletedAssets.map(({ id }) => id);
+    const listener = MediaLibrary.addListener((event) => {
+      if (event.hasIncrementalChanges) {
+        const { deletedAssets, insertedAssets, updatedAssets } = event;
 
-              const newState = current.filter(
-                ({ id }) => !deletedAssetsId.includes(id),
-              );
+        if (insertedAssets) {
+          setAssets((current) => [...current, ...insertedAssets]);
+        } else if (deletedAssets) {
+          setAssets((current) => {
+            const deletedAssetsId = deletedAssets.map(({ id }) => id);
 
-              return newState;
+            const newState = current.filter(
+              ({ id }) => !deletedAssetsId.includes(id),
+            );
+
+            return newState;
+          });
+        } else if (updatedAssets) {
+          setAssets((current) => {
+            const updatedAssetsId = updatedAssets.map(({ id }) => id);
+
+            return current.map((asset) => {
+              const index = updatedAssetsId.indexOf(asset.id);
+
+              if (index) return updatedAssets[index];
+
+              return asset;
             });
-          } else if (updatedAssets) {
-            setAssets((current) => {
-              const updatedAssetsId = updatedAssets.map(({ id }) => id);
-
-              return current.map((asset) => {
-                const index = updatedAssetsId.indexOf(asset.id);
-
-                if (index) return updatedAssets[index];
-
-                return asset;
-              });
-            });
-          }
-        } else {
-          setAssets([]);
-          getAssets();
+          });
         }
-      },
-    );
+      } else {
+        setAssets([]);
+        getAssets();
+      }
+    });
 
     return listener.remove;
   }, []);
