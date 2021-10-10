@@ -1,3 +1,4 @@
+/* eslint-disable operator-linebreak */
 import { Feather } from '@expo/vector-icons';
 import React from 'react';
 import { Image, TouchableWithoutFeedback, View } from 'react-native';
@@ -63,4 +64,14 @@ const Asset: React.FC<AssetProps> = ({
   </View>
 );
 
-export default Asset;
+// eslint-disable-next-line arrow-body-style
+export default React.memo(Asset, (prev, next) => {
+  return (
+    prev.id === next.id &&
+    prev.index === next.index &&
+    prev.isSelectionEnabled === next.isSelectionEnabled &&
+    prev.isSelected === next.isSelected &&
+    prev.handlePress === next.handleLongPress &&
+    prev.handleLongPress === next.handleLongPress
+  );
+});
