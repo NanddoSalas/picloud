@@ -4,30 +4,24 @@ import React from 'react';
 import { Image, TouchableWithoutFeedback, View } from 'react-native';
 
 interface AssetProps {
-  id: string;
   uri: string;
-  index: number;
   assetWidth: number;
   isSelected: boolean;
-  isSelectionEnabled: boolean;
-  handleLongPress: (id: string) => void;
-  handlePress: (id: string, index: number) => void;
+  onLongPress: () => void;
+  onPress: () => void;
 }
 
-const Asset: React.FC<AssetProps> = ({
-  id,
+const AssetItem: React.FC<AssetProps> = ({
   uri,
-  index,
   assetWidth,
   isSelected,
-  isSelectionEnabled,
-  handleLongPress,
-  handlePress,
+  onLongPress,
+  onPress,
 }) => (
   <View>
     <TouchableWithoutFeedback
-      onLongPress={() => handleLongPress(id)}
-      onPress={() => handlePress(id, index)}
+      onLongPress={onLongPress}
+      onPress={onPress}
       style={{
         width: assetWidth,
         height: assetWidth,
@@ -46,12 +40,14 @@ const Asset: React.FC<AssetProps> = ({
       >
         <Image
           source={{ uri }}
+          width={assetWidth}
+          height={assetWidth}
           style={{
             width: assetWidth,
             height: assetWidth,
           }}
         />
-        {isSelectionEnabled && (
+        {isSelected && (
           <Feather
             name={isSelected ? 'check-circle' : 'circle'}
             size={24}
@@ -65,13 +61,12 @@ const Asset: React.FC<AssetProps> = ({
 );
 
 // eslint-disable-next-line arrow-body-style
-export default React.memo(Asset, (prev, next) => {
+export default React.memo(AssetItem, (prev, next) => {
   return (
-    prev.id === next.id &&
-    prev.index === next.index &&
-    prev.isSelectionEnabled === next.isSelectionEnabled &&
+    prev.uri === next.uri &&
+    prev.assetWidth === next.assetWidth &&
     prev.isSelected === next.isSelected &&
-    prev.handlePress === next.handleLongPress &&
-    prev.handleLongPress === next.handleLongPress
+    prev.onPress === next.onPress &&
+    prev.onLongPress === next.onLongPress
   );
 });
