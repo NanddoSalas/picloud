@@ -21,3 +21,8 @@ export type HeaderOperation = {
   onPress: (selectedItems: any[]) => void;
   position: 'header' | 'actionsSheet';
 };
+
+export type Asset = {
+  id: string;
+  uri: string;
+};
