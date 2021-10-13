@@ -34,6 +34,17 @@ const Album: React.FC<NativeStackScreenProps<StackParams, 'Album'>> = ({
   const { isVisible, imageIndex, showImageView, hiddeImageView } =
     useImageView();
 
+  const handleAssetPress = (id: string, index: number) => {
+    if (isSelectionEnabled) handleSelection(id);
+    else showImageView(index);
+  };
+
+  const handleAssetLongPress = (id: string) => {
+    Haptics.selectionAsync();
+    if (!isSelectionEnabled) enableSelection(id);
+    else handleSelection(id);
+  };
+
   useLayoutEffect(() => {
     navigation.setOptions({
       header: () => (
@@ -78,17 +89,6 @@ const Album: React.FC<NativeStackScreenProps<StackParams, 'Album'>> = ({
       ),
     });
   }, [isSelectionEnabled, selectedItems]);
-
-  const handleAssetPress = (id: string, index: number) => {
-    if (isSelectionEnabled) handleSelection(id);
-    else showImageView(index);
-  };
-
-  const handleAssetLongPress = (id: string) => {
-    Haptics.selectionAsync();
-    if (!isSelectionEnabled) enableSelection(id);
-    else handleSelection(id);
-  };
 
   return (
     <Box>

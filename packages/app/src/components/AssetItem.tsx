@@ -3,7 +3,7 @@ import { Feather } from '@expo/vector-icons';
 import React from 'react';
 import { Image, TouchableWithoutFeedback, View } from 'react-native';
 
-interface AssetProps {
+interface AssetItemProps {
   uri: string;
   assetWidth: number;
   isSelected: boolean;
@@ -11,7 +11,7 @@ interface AssetProps {
   onPress: () => void;
 }
 
-const AssetItem: React.FC<AssetProps> = ({
+const AssetItem: React.FC<AssetItemProps> = ({
   uri,
   assetWidth,
   isSelected,

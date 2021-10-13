@@ -18,6 +18,11 @@ const Album: React.FC<AlbumProps> = ({ albumId, albumName, onPress }) => {
   const [thumbnailUri, setThumbnailUri] = useState('');
   const { width } = useWindowDimensions();
 
+  const folders = Math.trunc(width / 150);
+  const foldersWidth = folders * 150;
+  const totalMargin = width - foldersWidth;
+  const margin = totalMargin / (folders + 1) / 2;
+
   useEffect(() => {
     MediaLibrary.getAssetsAsync({
       album: albumId,
@@ -29,11 +34,6 @@ const Album: React.FC<AlbumProps> = ({ albumId, albumName, onPress }) => {
   }, []);
 
   if (!thumbnailUri) return null;
-
-  const folders = Math.trunc(width / 150);
-  const foldersWidth = folders * 150;
-  const totalMargin = width - foldersWidth;
-  const margin = totalMargin / (folders + 1) / 2;
 
   return (
     <View style={{ margin }}>
