@@ -1,9 +1,10 @@
 import { AntDesign, MaterialIcons } from '@expo/vector-icons';
-import { useHeaderHeight } from '@react-navigation/elements';
+import { getDefaultHeaderHeight } from '@react-navigation/elements';
 import { useTheme } from '@react-navigation/native';
+import Constants from 'expo-constants';
 import { Actionsheet } from 'native-base';
 import React, { useState } from 'react';
-import { Text, View } from 'react-native';
+import { Text, useWindowDimensions, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { HeaderOperation } from '../types';
 import TouchableIcon from './TouchableIcon';
@@ -28,7 +29,12 @@ const SelectionHeader: React.FC<SelectionHeaderProps> = ({
   const [showActionsSheet, setShowActionsSheet] = useState(false);
   const { colors } = useTheme();
   const insets = useSafeAreaInsets();
-  const headerHeight = useHeaderHeight();
+  const { width, height } = useWindowDimensions();
+  const headerHeight = getDefaultHeaderHeight(
+    { height, width },
+    false,
+    Constants.statusBarHeight,
+  );
 
   return (
     <View
