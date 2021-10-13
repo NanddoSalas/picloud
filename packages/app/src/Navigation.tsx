@@ -4,9 +4,8 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { DarkTheme, NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import AppLoading from 'expo-app-loading';
-import { setItemAsync } from 'expo-secure-store';
 import React from 'react';
-import TouchableIcon from './components/TouchableIcon';
+import MainHeader from './components/MainHeader';
 import { Album, Gallery, Login, Photos, Signup } from './screens';
 import { StackParams, TabParams } from './types';
 
@@ -14,11 +13,7 @@ const Stack = createNativeStackNavigator<StackParams>();
 const Tab = createBottomTabNavigator<TabParams>();
 
 const Main = () => (
-  <Tab.Navigator
-    screenOptions={{
-      headerShown: false,
-    }}
-  >
+  <Tab.Navigator screenOptions={{ header: () => <MainHeader /> }}>
     <Tab.Screen
       name="Photos"
       component={Photos}
@@ -41,7 +36,7 @@ const Main = () => (
 );
 
 const Navigation = () => {
-  const { data, loading, client } = useMeQuery();
+  const { data, loading } = useMeQuery();
 
   if (loading) return <AppLoading />;
 
@@ -71,22 +66,7 @@ const Navigation = () => {
               name="Main"
               component={Main}
               options={{
-                title: data.me.name,
-                headerRight: ({ tintColor }) => (
-                  <TouchableIcon
-                    icon={() => (
-                      <MaterialIcons
-                        name="logout"
-                        size={24}
-                        color={tintColor}
-                      />
-                    )}
-                    onPress={() => {
-                      setItemAsync('accesToken', '');
-                      client.refetchQueries({ include: ['Me'] });
-                    }}
-                  />
-                ),
+                headerShown: false,
               }}
             />
             <Stack.Screen name="Album" component={Album} />
