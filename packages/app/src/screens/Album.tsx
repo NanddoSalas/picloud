@@ -8,7 +8,7 @@ import React, { useContext, useLayoutEffect } from 'react';
 import ImageView from 'react-native-image-viewing';
 import AssetsList from '../components/AssetsList';
 import SelectionHeader from '../components/SelectionHeader';
-import BackupContext from '../context/BackupContext';
+import { PicloudContext } from '../context/PicloudContext';
 import useAlbum from '../hooks/useAlbum';
 import useImageView from '../hooks/useImageView';
 import useSelection from '../hooks/useSelection';
@@ -21,7 +21,7 @@ const Album: React.FC<NativeStackScreenProps<StackParams, 'Album'>> = ({
   const { colors } = useTheme();
   const { albumId, albumName } = route.params;
   const { assets, loadNextPage } = useAlbum(albumId);
-  const { backUpAssets } = useContext(BackupContext);
+  const { backUpAssets } = useContext(PicloudContext);
   const {
     isSelectionEnabled,
     selectedItems,

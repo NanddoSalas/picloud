@@ -14,11 +14,11 @@ import {
   VStack,
   ZStack,
 } from 'native-base';
-import React from 'react';
+import React, { useContext } from 'react';
 import { useForm } from 'react-hook-form';
 import { Keyboard } from 'react-native';
 import FieldInput from '../components/FieldInput';
-import useCleanup from '../hooks/useCleanup';
+import { PicloudContext } from '../context/PicloudContext';
 
 const Login = () => {
   const client = useApolloClient();
@@ -26,7 +26,7 @@ const Login = () => {
   const { control, handleSubmit, setError } = useForm();
   const { colors } = useTheme();
   const [googleAuth] = useGoogleAuthMutation();
-  const cleanup = useCleanup();
+  const { cleanup } = useContext(PicloudContext);
   const [, , promptAsync] = Google.useAuthRequest({
     expoClientId: Constants.manifest?.extra!.expoClientId,
     responseType: ResponseType.IdToken,

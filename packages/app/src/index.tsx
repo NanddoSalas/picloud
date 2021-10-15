@@ -3,8 +3,7 @@ import * as MediaLibrary from 'expo-media-library';
 import { NativeBaseProvider } from 'native-base';
 import React, { useEffect } from 'react';
 import client from './client';
-import BackupContextProvider from './components/BackupContextProvider';
-import PhotosContextProvider from './components/PhotosContextProvider';
+import { PicloudContextProvider } from './context/PicloudContext';
 import Navigation from './Navigation';
 
 const App = () => {
@@ -21,11 +20,9 @@ const App = () => {
   return (
     <NativeBaseProvider>
       <ApolloProvider client={client}>
-        <PhotosContextProvider>
-          <BackupContextProvider>
-            <Navigation />
-          </BackupContextProvider>
-        </PhotosContextProvider>
+        <PicloudContextProvider>
+          <Navigation />
+        </PicloudContextProvider>
       </ApolloProvider>
     </NativeBaseProvider>
   );

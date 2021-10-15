@@ -26,3 +26,15 @@ export type Asset = {
   id: string;
   uri: string;
 };
+
+export type BackedUpAssetStatus =
+  | 'PENDING'
+  | 'UPLOADING'
+  | 'BACKEDUP'
+  | 'ERROR';
+
+export type BackedUpAsset = {
+  localId: string;
+  remoteId: string | null;
+  status: BackedUpAssetStatus;
+};

@@ -7,7 +7,7 @@ import ImageView from 'react-native-image-viewing';
 import AssetsList from '../components/AssetsList';
 import MainHeader from '../components/MainHeader';
 import SelectionHeader from '../components/SelectionHeader';
-import PhotosContext from '../context/PhotosContext';
+import { PicloudContext } from '../context/PicloudContext';
 import useImageView from '../hooks/useImageView';
 import useSelection from '../hooks/useSelection';
 import { TabParams } from '../types';
@@ -15,7 +15,7 @@ import { TabParams } from '../types';
 const Photos: React.FC<BottomTabScreenProps<TabParams, 'Photos'>> = ({
   navigation,
 }) => {
-  const { assets, fetchMore, refresh } = useContext(PhotosContext);
+  const { assets, fetchMoreAssets, refreshAssets } = useContext(PicloudContext);
   const [refreshing, setRefreshing] = useState(false);
   const { isVisible, imageIndex, hiddeImageView, showImageView } =
     useImageView();
@@ -40,7 +40,7 @@ const Photos: React.FC<BottomTabScreenProps<TabParams, 'Photos'>> = ({
 
   const handleRefresh = async () => {
     setRefreshing(true);
-    refresh();
+    refreshAssets();
     setRefreshing(false);
   };
 
@@ -80,7 +80,7 @@ const Photos: React.FC<BottomTabScreenProps<TabParams, 'Photos'>> = ({
         selectedAssetsId={selectedItems}
         onAssetPress={handleAssetPress}
         onLongAssetPress={handleAssetLongPress}
-        onEndReached={() => fetchMore()}
+        onEndReached={() => fetchMoreAssets()}
         refreshing={refreshing}
         onRefresh={handleRefresh}
       />
