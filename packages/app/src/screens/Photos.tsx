@@ -2,7 +2,7 @@
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
 import * as Haptics from 'expo-haptics';
 import { Box } from 'native-base';
-import React, { useContext, useLayoutEffect } from 'react';
+import React, { useContext, useLayoutEffect, useState } from 'react';
 import ImageView from 'react-native-image-viewing';
 import AssetsList from '../components/AssetsList';
 import MainHeader from '../components/MainHeader';
@@ -15,7 +15,8 @@ import { TabParams } from '../types';
 const Photos: React.FC<BottomTabScreenProps<TabParams, 'Photos'>> = ({
   navigation,
 }) => {
-  const { assets, fetchMore } = useContext(PhotosContext);
+  const { assets, fetchMore, refresh } = useContext(PhotosContext);
+  const [refreshing, setRefreshing] = useState(false);
   const { isVisible, imageIndex, hiddeImageView, showImageView } =
     useImageView();
   const {
@@ -30,10 +31,17 @@ const Photos: React.FC<BottomTabScreenProps<TabParams, 'Photos'>> = ({
     if (isSelectionEnabled) handleSelection(id);
     else showImageView(index);
   };
+
   const handleAssetLongPress = (id: string) => {
     Haptics.selectionAsync();
     if (isSelectionEnabled) handleSelection(id);
     else enableSelection(id);
+  };
+
+  const handleRefresh = async () => {
+    setRefreshing(true);
+    refresh();
+    setRefreshing(false);
   };
 
   useLayoutEffect(() => {
@@ -73,6 +81,8 @@ const Photos: React.FC<BottomTabScreenProps<TabParams, 'Photos'>> = ({
         onAssetPress={handleAssetPress}
         onLongAssetPress={handleAssetLongPress}
         onEndReached={() => fetchMore()}
+        refreshing={refreshing}
+        onRefresh={handleRefresh}
       />
     </Box>
   );

@@ -9,6 +9,8 @@ interface AssetListProps {
   onAssetPress: (id: string, index: number) => void;
   onLongAssetPress: (id: string) => void;
   onEndReached: () => void;
+  refreshing?: boolean;
+  onRefresh?: () => void;
 }
 const AssetsList: React.FC<AssetListProps> = ({
   assets,
@@ -16,6 +18,8 @@ const AssetsList: React.FC<AssetListProps> = ({
   onAssetPress,
   onLongAssetPress,
   onEndReached,
+  refreshing,
+  onRefresh,
 }) => {
   const { width } = useWindowDimensions();
 
@@ -57,8 +61,15 @@ const AssetsList: React.FC<AssetListProps> = ({
       getItemLayout={getItemLayout}
       onEndReached={onEndReached}
       extraData={selectedAssetsId}
+      refreshing={refreshing}
+      onRefresh={onRefresh}
     />
   );
+};
+
+AssetsList.defaultProps = {
+  refreshing: undefined,
+  onRefresh: undefined,
 };
 
 export default AssetsList;

@@ -11,7 +11,7 @@ type Asset = {
 const usePhotos = () => {
   const [assets, setAssets] = useState<Asset[]>([]);
   const [cursor, setCursor] = useState<string | null>(null);
-  const { data, loading, fetchMore } = usePhotosQuery({
+  const { data, loading, fetchMore, refetch } = usePhotosQuery({
     notifyOnNetworkStatusChange: true,
     variables: { photosLimit: 8 },
   });
@@ -93,11 +93,15 @@ const usePhotos = () => {
     }
   };
 
+  const refresh = async () => {
+    await refetch();
+  };
+
   useEffect(() => {
     main();
   }, [loading]);
 
-  return { assets, fetchMore: enhancedFetchMore, addNewPhotos };
+  return { assets, fetchMore: enhancedFetchMore, addNewPhotos, refresh };
 };
 
 export default usePhotos;

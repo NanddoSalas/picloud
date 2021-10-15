@@ -1,7 +1,21 @@
 import React from 'react';
-import { ScrollView, useWindowDimensions, View } from 'react-native';
+import {
+  RefreshControl,
+  ScrollView,
+  useWindowDimensions,
+  View,
+} from 'react-native';
 
-const AlbumsContainer: React.FC = ({ children }) => {
+interface AlbumsContainerProps {
+  refreshing: boolean;
+  onRefresh: () => void;
+}
+
+const AlbumsContainer: React.FC<AlbumsContainerProps> = ({
+  children,
+  refreshing,
+  onRefresh,
+}) => {
   const { width } = useWindowDimensions();
 
   const foldersPerWidth = Math.trunc(width / 150);
@@ -11,7 +25,11 @@ const AlbumsContainer: React.FC = ({ children }) => {
 
   return (
     <View style={{ flex: 1 }}>
-      <ScrollView>
+      <ScrollView
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
+      >
         <View
           style={{
             padding,

@@ -8,13 +8,24 @@ import { StackParams } from '../types';
 const Gallery: React.FC = () => {
   const [albums, setAlbums] = useState<MediaLibrary.Album[]>([]);
   const { navigate } = useNavigation<NavigationProp<StackParams>>();
+  const [refreshing, setRefreshing] = useState(false);
+
+  const main = async () => {
+    MediaLibrary.getAlbumsAsync().then((value) => setAlbums(value));
+  };
+
+  const handleRefresh = async () => {
+    setRefreshing(true);
+    await main();
+    setRefreshing(false);
+  };
 
   useEffect(() => {
-    MediaLibrary.getAlbumsAsync().then((value) => setAlbums(value));
+    main();
   }, []);
 
   return (
-    <AlbumsContainer>
+    <AlbumsContainer refreshing={refreshing} onRefresh={handleRefresh}>
       {albums.map(({ id, title }) => (
         <Album
           key={id}
