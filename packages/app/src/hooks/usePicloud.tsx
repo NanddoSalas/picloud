@@ -1,4 +1,4 @@
-import { useApolloClient } from '@apollo/client';
+import { makeReference, useApolloClient } from '@apollo/client';
 import {
   Photo,
   usePhotosQuery,
@@ -168,7 +168,26 @@ const usePicloud = () => {
 
           await addNewPhotos([photo]);
 
-          // TODO: update cache
+          cache.modify({
+            fields: {
+              photos: (currentCache) => {
+                const photoRef = cache.identify(photo);
+                if (photoRef) {
+                  const newCache = {
+                    ...currentCache,
+                    photos: [
+                      makeReference(photoRef),
+                      ...(currentCache.photos || []),
+                    ],
+                  };
+
+                  return newCache;
+                }
+                return currentCache;
+              },
+            },
+            broadcast: false,
+          });
         }
       },
     });
