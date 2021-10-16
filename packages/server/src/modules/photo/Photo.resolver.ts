@@ -5,6 +5,7 @@ import { Photo } from '../../entities';
 import { Context } from '../../types';
 import { validateAndUploadPhoto } from '../../utils';
 import { DeletePhotoInput, DeletePhotoPayload } from './deletePhoto';
+import { DeletePhotosInput, DeletePhotosPayload } from './deletePhotos';
 import PhotosArgs from './photos/PhotosArgs';
 import PhotosPayload from './photos/PhotosPayload';
 import { UploadPhotoInput, UploadPhotoPayload } from './uploadPhoto';
@@ -56,5 +57,26 @@ export default class PhotoResolver {
       .execute();
 
     return { deletedPhotoId: affected ? id : undefined };
+  }
+
+  @Auth()
+  @Mutation(() => DeletePhotosPayload)
+  async deletePhotos(
+    @Arg('input') { ids }: DeletePhotosInput,
+    @Ctx() { user }: Context,
+  ): Promise<DeletePhotosPayload> {
+    const { affected } = await Photo.createQueryBuilder()
+      .delete()
+      .where('id IN (:...ids) ', { ids })
+      .andWhere('ownerId = :userId', { userId: user!.id })
+      .execute();
+
+    if (affected === ids.length) {
+      return { deletedPhotosId: ids };
+    }
+
+    // TODO: return affected rows id
+
+    return { deletedPhotosId: [] };
   }
 }
