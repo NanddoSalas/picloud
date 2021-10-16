@@ -8,6 +8,7 @@ export const PicloudContext = createContext<ReturnType<typeof usePicloud>>({
   refreshAssets: () => Promise.resolve(),
   backUpAssets: () => null,
   cleanup: () => Promise.resolve(),
+  deletePhotos: () => Promise.resolve(),
 });
 
 export const PicloudContextProvider: React.FC = ({ children }) => {

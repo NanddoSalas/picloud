@@ -1,5 +1,7 @@
 /* eslint-disable operator-linebreak */
+import { MaterialIcons } from '@expo/vector-icons';
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
+import { useTheme } from '@react-navigation/native';
 import * as Haptics from 'expo-haptics';
 import { Box } from 'native-base';
 import React, { useContext, useLayoutEffect, useState } from 'react';
@@ -15,7 +17,8 @@ import { TabParams } from '../types';
 const Photos: React.FC<BottomTabScreenProps<TabParams, 'Photos'>> = ({
   navigation,
 }) => {
-  const { assets, fetchMoreAssets, refreshAssets } = useContext(PicloudContext);
+  const { assets, fetchMoreAssets, refreshAssets, deletePhotos } =
+    useContext(PicloudContext);
   const [refreshing, setRefreshing] = useState(false);
   const { isVisible, imageIndex, hiddeImageView, showImageView } =
     useImageView();
@@ -26,6 +29,7 @@ const Photos: React.FC<BottomTabScreenProps<TabParams, 'Photos'>> = ({
     selectedItems,
     disableSelection,
   } = useSelection();
+  const { colors } = useTheme();
 
   const handleAssetPress = (id: string, index: number) => {
     if (isSelectionEnabled) handleSelection(id);
@@ -52,7 +56,16 @@ const Photos: React.FC<BottomTabScreenProps<TabParams, 'Photos'>> = ({
             title=""
             selectedItems={selectedItems}
             isSelectionEnabled={isSelectionEnabled}
-            operations={[]}
+            operations={[
+              {
+                name: 'Delete from cloud and device',
+                icon: () => (
+                  <MaterialIcons name="delete" size={26} color={colors.text} />
+                ),
+                onPress: async (ids) => deletePhotos(ids),
+                position: 'actionsSheet',
+              },
+            ]}
             onGoBack={() => {}}
             onDisableSelection={disableSelection}
           />

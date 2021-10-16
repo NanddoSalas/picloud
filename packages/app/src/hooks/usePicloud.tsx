@@ -1,6 +1,7 @@
-import { makeReference, useApolloClient } from '@apollo/client';
+import { makeReference, Reference, useApolloClient } from '@apollo/client';
 import {
   Photo,
+  useDeletePhotosMutation,
   usePhotosQuery,
   useUploadPhotoMutation,
 } from '@picloud/controller';
@@ -16,6 +17,7 @@ const usePicloud = () => {
     notifyOnNetworkStatusChange: true,
     variables: { photosLimit: 8 },
   });
+  const [callDeletePhotos] = useDeletePhotosMutation();
   const [assets, setAssets] = useState<Asset[]>([]);
   const [cursor, setCursor] = useState<string | null>(null);
 
@@ -62,9 +64,6 @@ const usePicloud = () => {
 
     setAssets((current) => [...newAssets, ...current]);
   };
-
-  // TODO
-  // const deletePhotos = async () => {};
 
   const main = async () => {
     if (!loading && data) {
@@ -142,6 +141,15 @@ const usePicloud = () => {
 
       return newState.sort();
     });
+  };
+
+  const getLocalIdsFromRemoteIds = (ids: string[]) => {
+    const localIds = ids
+      .map((id) => backedUpAssets.find(({ remoteId }) => remoteId === id))
+      .filter((x) => x !== undefined)
+      .map((x) => x!.localId);
+
+    return localIds;
   };
 
   const handleUpload = async () => {
@@ -273,6 +281,61 @@ const usePicloud = () => {
     ]);
   };
 
+  const deletePhotos = async (ids: string[]) => {
+    try {
+      const localIds = getLocalIdsFromRemoteIds(ids);
+
+      await MediaLibrary.deleteAssetsAsync(localIds);
+
+      setBackedUpAssets((current) => {
+        const newState = current.filter(
+          ({ localId }) => !localIds.includes(localId),
+        );
+
+        return newState;
+      });
+
+      await callDeletePhotos({
+        variables: { deletePhotosInput: { ids } },
+        update: (cache, res) => {
+          const deletedPhotosId = res.data?.deletePhotos.deletedPhotosId || [];
+
+          if (deletedPhotosId.length > 0) {
+            setAssets((current) => {
+              const newState = current.filter(
+                ({ id }) => !deletedPhotosId.includes(id),
+              );
+
+              return newState;
+            });
+
+            cache.modify({
+              fields: {
+                photos: (currentCache, { readField }) => {
+                  const newCache = {
+                    ...currentCache,
+                    photos: (currentCache.photos as Array<Reference>).filter(
+                      (photoRef) => {
+                        const photoId = readField<string>('id', photoRef);
+
+                        return !deletedPhotosId.includes(photoId!);
+                      },
+                    ),
+                  };
+
+                  return newCache;
+                },
+              },
+              broadcast: false,
+            });
+          }
+        },
+      });
+    } catch (error) {
+      // TODO: error handling
+    }
+  };
+
   useEffect(() => {
     main();
   }, [loading]);
@@ -299,6 +362,7 @@ const usePicloud = () => {
     refreshAssets,
     backUpAssets,
     cleanup,
+    deletePhotos,
   };
 };
 
