@@ -223,6 +223,7 @@ const usePicloud = () => {
 
   const fetchMoreAssets = async () => {
     if (cursor) {
+      setCursor('');
       await fetchMore({
         variables: { photosCursor: cursor },
         updateQuery: (prev, { fetchMoreResult: more }) => {
