@@ -16,6 +16,7 @@ interface SelectionHeaderProps {
   operations: HeaderOperation[];
   onGoBack: () => void;
   onDisableSelection: () => void;
+  headerLeft?: React.ReactElement | undefined;
 }
 
 const SelectionHeader: React.FC<SelectionHeaderProps> = ({
@@ -25,6 +26,7 @@ const SelectionHeader: React.FC<SelectionHeaderProps> = ({
   operations,
   onGoBack,
   onDisableSelection,
+  headerLeft,
 }) => {
   const [showActionsSheet, setShowActionsSheet] = useState(false);
   const { colors } = useTheme();
@@ -60,7 +62,7 @@ const SelectionHeader: React.FC<SelectionHeaderProps> = ({
       <Text style={{ fontSize: 20, color: colors.text }}>
         {isSelectionEnabled ? selectedItems.length.toString() : title}
       </Text>
-      {isSelectionEnabled && (
+      {isSelectionEnabled ? (
         <View
           style={{
             flex: 1,
@@ -89,6 +91,17 @@ const SelectionHeader: React.FC<SelectionHeaderProps> = ({
             )}
             onPress={() => setShowActionsSheet(true)}
           />
+        </View>
+      ) : (
+        <View
+          style={{
+            flex: 1,
+            display: 'flex',
+            flexDirection: 'row',
+            justifyContent: 'flex-end',
+          }}
+        >
+          {headerLeft}
         </View>
       )}
 
@@ -126,6 +139,10 @@ const SelectionHeader: React.FC<SelectionHeaderProps> = ({
       </Actionsheet>
     </View>
   );
+};
+
+SelectionHeader.defaultProps = {
+  headerLeft: undefined,
 };
 
 export default SelectionHeader;
