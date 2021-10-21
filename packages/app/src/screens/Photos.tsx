@@ -17,7 +17,7 @@ import { TabParams } from '../types';
 const Photos: React.FC<BottomTabScreenProps<TabParams, 'Photos'>> = ({
   navigation,
 }) => {
-  const { assets, fetchMoreAssets, refreshAssets, deletePhotos } =
+  const { assets, fetchMoreAssets, refreshAssets, deleteAssets } =
     useContext(PicloudContext);
   const [refreshing, setRefreshing] = useState(false);
   const { isVisible, imageIndex, hiddeImageView, showImageView } =
@@ -62,7 +62,7 @@ const Photos: React.FC<BottomTabScreenProps<TabParams, 'Photos'>> = ({
                 icon: () => (
                   <MaterialIcons name="delete" size={26} color={colors.text} />
                 ),
-                onPress: async (ids) => deletePhotos(ids),
+                onPress: async (ids) => deleteAssets(ids),
                 position: 'actionsSheet',
               },
             ]}

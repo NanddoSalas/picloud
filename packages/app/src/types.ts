@@ -27,14 +27,7 @@ export type Asset = {
   uri: string;
 };
 
-export type BackedUpAssetStatus =
-  | 'PENDING'
-  | 'UPLOADING'
-  | 'BACKEDUP'
-  | 'ERROR';
-
-export type BackedUpAsset = {
+export type BackupPayload = {
   localId: string;
-  remoteId: string | null;
-  status: BackedUpAssetStatus;
+  remoteId: string;
 };

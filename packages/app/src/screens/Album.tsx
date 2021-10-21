@@ -21,7 +21,7 @@ const Album: React.FC<NativeStackScreenProps<StackParams, 'Album'>> = ({
   const { colors } = useTheme();
   const { albumId, albumName } = route.params;
   const { assets, loadNextPage } = useAlbum(albumId);
-  const { backUpAssets } = useContext(PicloudContext);
+  const { backupAssets } = useContext(PicloudContext);
   const {
     isSelectionEnabled,
     selectedItems,
@@ -70,7 +70,7 @@ const Album: React.FC<NativeStackScreenProps<StackParams, 'Album'>> = ({
               icon: () => (
                 <MaterialIcons name="backup" size={26} color={colors.text} />
               ),
-              onPress: (ids) => backUpAssets(ids),
+              onPress: (ids) => backupAssets(ids),
               position: 'actionsSheet',
             },
             {

@@ -3,12 +3,12 @@ import usePicloud from '../hooks/usePicloud';
 
 export const PicloudContext = createContext<ReturnType<typeof usePicloud>>({
   assets: [],
-  backedUpAssets: [],
+  backupPayloads: [],
   fetchMoreAssets: () => Promise.resolve(),
   refreshAssets: () => Promise.resolve(),
-  backUpAssets: () => null,
+  backupAssets: () => null,
+  deleteAssets: () => Promise.resolve(),
   cleanup: () => Promise.resolve(),
-  deletePhotos: () => Promise.resolve(),
 });
 
 export const PicloudContextProvider: React.FC = ({ children }) => {
