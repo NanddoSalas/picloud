@@ -22,6 +22,7 @@ const usePicloud = () => {
   const [assets, setAssets] = useState<Asset[]>([]);
   const [cursor, setCursor] = useState<string | null>(null);
   const [backupPayloads, setBackupPayloads] = useState<BackupPayload[]>([]);
+  const [backedupAlbums, setBackedupAlbums] = useState<string[]>([]);
   const [uploadQueue, setUploadQueue] = useState<string[]>([]);
   const [uploading, setUploading] = useState(false);
   const [hasLoaded, setHasLoaded] = useState(false);
@@ -83,6 +84,31 @@ const usePicloud = () => {
       .map((x) => x!.localId);
 
     return localIds;
+  };
+
+  const backupAlbum = async (albumId: string, payloads: BackupPayload[]) => {
+    let endCursor = '';
+
+    do {
+      // eslint-disable-next-line no-await-in-loop
+      const pageInfo = await MediaLibrary.getAssetsAsync({
+        album: albumId,
+        mediaType: 'photo',
+        after: endCursor || undefined,
+      });
+
+      if (pageInfo.hasNextPage) {
+        endCursor = pageInfo.endCursor;
+      } else {
+        endCursor = '';
+      }
+
+      const ids = pageInfo.assets
+        .map((asset) => asset.id)
+        .filter((localId) => findPayload(localId, payloads)[0] === null);
+
+      if (ids.length > 0) setUploadQueue((current) => current.concat(ids));
+    } while (endCursor);
   };
 
   // returned functions
@@ -174,10 +200,28 @@ const usePicloud = () => {
     }
   };
 
+  const backupAlbumSwitch = async (albumId: string) => {
+    setBackedupAlbums((current) => {
+      const index = current.findIndex((x) => x === albumId);
+
+      if (index !== -1) {
+        return [
+          ...current.slice(0, index),
+          ...current.slice(index + 1, current.length),
+        ];
+      }
+
+      backupAlbum(albumId, backupPayloads);
+
+      return [...current, albumId];
+    });
+  };
+
   const cleanup = async () => {
     setAssets([]);
     setCursor(null);
     setBackupPayloads([]);
+    setBackedupAlbums([]);
     setUploadQueue([]);
     setUploading(false);
 
@@ -187,12 +231,21 @@ const usePicloud = () => {
   // effect handlers
 
   const init = async () => {
-    const backupPayloadsItem = await AsyncStorage.getItem('backupPayloads');
+    const backupPayloadsState: BackupPayload[] = JSON.parse(
+      (await AsyncStorage.getItem('backupPayloads')) || '[]',
+    );
 
-    if (backupPayloadsItem) {
-      const state = JSON.parse(backupPayloadsItem);
-      setBackupPayloads(state);
-    }
+    const backedupAlbumsState: string[] = JSON.parse(
+      (await AsyncStorage.getItem('backedupAlbums')) || '[]',
+    );
+
+    setBackupPayloads(backupPayloadsState);
+    setBackedupAlbums(backedupAlbumsState);
+
+    // backup on startup
+    backedupAlbumsState.forEach((albumId) => {
+      backupAlbum(albumId, backupPayloadsState);
+    });
 
     setHasLoaded(true);
   };
@@ -286,6 +339,12 @@ const usePicloud = () => {
   }, [backupPayloads]);
 
   useEffect(() => {
+    if (hasLoaded) {
+      AsyncStorage.setItem('backedupAlbums', JSON.stringify(backedupAlbums));
+    }
+  }, [backedupAlbums]);
+
+  useEffect(() => {
     if (uploadQueue.length > 0 && !uploading) {
       setUploading(true);
       handleUpload();
@@ -295,10 +354,12 @@ const usePicloud = () => {
   return {
     assets,
     backupPayloads,
+    backedupAlbums,
     fetchMoreAssets,
     refreshAssets,
     backupAssets,
     deleteAssets,
+    backupAlbumSwitch,
     cleanup,
   };
 };

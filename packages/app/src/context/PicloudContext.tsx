@@ -4,10 +4,12 @@ import usePicloud from '../hooks/usePicloud';
 export const PicloudContext = createContext<ReturnType<typeof usePicloud>>({
   assets: [],
   backupPayloads: [],
+  backedupAlbums: [],
   fetchMoreAssets: () => Promise.resolve(),
   refreshAssets: () => Promise.resolve(),
   backupAssets: () => null,
   deleteAssets: () => Promise.resolve(),
+  backupAlbumSwitch: () => Promise.resolve(),
   cleanup: () => Promise.resolve(),
 });
 

@@ -7,6 +7,7 @@ import { Box } from 'native-base';
 import React, { useContext, useLayoutEffect } from 'react';
 import ImageView from 'react-native-image-viewing';
 import AssetsList from '../components/AssetsList';
+import BackupAndSyncSwitch from '../components/BackupAndSyncSwitch';
 import SelectionHeader from '../components/SelectionHeader';
 import { PicloudContext } from '../context/PicloudContext';
 import useAlbum from '../hooks/useAlbum';
@@ -85,6 +86,7 @@ const Album: React.FC<NativeStackScreenProps<StackParams, 'Album'>> = ({
           // eslint-disable-next-line react/prop-types
           onGoBack={navigation.goBack}
           onDisableSelection={disableSelection}
+          headerLeft={<BackupAndSyncSwitch albumId={albumId} />}
         />
       ),
     });

@@ -9,7 +9,7 @@ interface BackupAndSyncSwitchProps {
 const BackupAndSyncSwitch: React.FC<BackupAndSyncSwitchProps> = ({
   albumId,
 }) => {
-  const { backedUpAlbums, backupAlbumSwitch } = useContext(PicloudContext);
+  const { backedupAlbums, backupAlbumSwitch } = useContext(PicloudContext);
   const [isChecked, setIsChecked] = useState(false);
 
   const handleToggle = () => {
@@ -18,7 +18,7 @@ const BackupAndSyncSwitch: React.FC<BackupAndSyncSwitchProps> = ({
   };
 
   useEffect(() => {
-    if (backedUpAlbums.includes(albumId)) {
+    if (backedupAlbums.includes(albumId)) {
       setIsChecked(true);
     } else {
       setIsChecked(false);
