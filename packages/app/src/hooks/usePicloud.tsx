@@ -116,7 +116,13 @@ const usePicloud = () => {
   };
 
   const backupAssets = (localIds: string[]) => {
-    setUploadQueue((current) => [...current, ...localIds]);
+    const ids = localIds.filter(
+      (localId) => findPayload(localId, backupPayloads)[0] === null,
+    );
+
+    if (ids.length > 0) {
+      setUploadQueue((current) => [...current, ...ids]);
+    }
   };
 
   const deleteAssets = async (remoteIds: string[]) => {
@@ -208,12 +214,11 @@ const usePicloud = () => {
   const handleUpload = async () => {
     const localId = uploadQueue[0];
 
-    setUploadQueue((current) => current.slice(1));
-
     const [payload] = findPayload(localId, backupPayloads);
 
     if (payload) {
       setUploading(false);
+      setUploadQueue((current) => current.slice(1));
       return;
     }
 
@@ -263,6 +268,7 @@ const usePicloud = () => {
     });
 
     setUploading(false);
+    setUploadQueue((current) => current.slice(1));
   };
 
   useEffect(() => {
@@ -284,7 +290,7 @@ const usePicloud = () => {
       setUploading(true);
       handleUpload();
     }
-  }, [uploadQueue, uploading]);
+  }, [uploadQueue]);
 
   return {
     assets,
