@@ -121,3 +121,4 @@ dist
 .vscode
 
 key.json
+db.sqlite
