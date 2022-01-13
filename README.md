@@ -2,8 +2,6 @@
 
 Android application that allows you backup your photos.
 
-[Try with Expo](https://expo.dev/@nanddosalas/picloud)
-
 ## Features
 
 - See local photos
